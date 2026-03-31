@@ -11,7 +11,7 @@ The system is designed to simplify working with large sets of engineering drawin
 ## Project Structure
 
 ```text
-AVIS-Manager/
+DWG-AI-Manager/
 ├── app.py                # Main Flask server logic and API endpoints
 ├── webview_app.py        # Desktop application entry point (PyWebView)
 ├── requirements.txt      # Python dependencies

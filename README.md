@@ -42,10 +42,9 @@ The system is designed to simplify working with large sets of engineering drawin
 ### Legend Counter
 ![Legend Counter](screenshots/legend_counter.png)
 
-### Excel Output — DWG List
+### DWG List
 ![Excel DWG List](screenshots/Excel_list_1.png)
 
-### Excel Output — Symbol Count Report
 ![Excel Symbol Count](screenshots/Excel_list_2.png)
 
 ---

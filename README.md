@@ -31,6 +31,25 @@ The system is designed to simplify working with large sets of engineering drawin
 
 ---
 
+## Screenshots
+
+### Main Interface
+![Main UI](screenshots/main_ui.png)
+
+### AI Project Reader
+![AI Project Reader](screenshots/ai_reader.png)
+
+### Legend Extractor
+![Legend Counter](screenshots/legend_extractor.png)
+
+### Legend Counter
+![Legend Counter](screenshots/legend_counter.png)
+
+### Output Report
+![Output Report](screenshots/output_report.png)
+
+---
+
 ## System Prerequisites
 
 1. **AutoCAD**

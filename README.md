@@ -8,6 +8,33 @@ The system is designed to simplify working with large sets of engineering drawin
 
 ---
 
+## Project Structure
+
+```text
+AVIS-Manager/
+├── app.py                # Main Flask server logic and API endpoints
+├── webview_app.py        # Desktop application entry point (PyWebView)
+├── requirements.txt      # Python dependencies
+├── LICENSE               # MIT License
+├── DWG_Process/          # DWG to PDF conversion using AutoCAD Console
+│   └── DWG_TO_PDF.py
+├── Legend_Counter/       # Symbol detection and counting logic
+│   ├── symbol_counter.py
+│   ├── symbol_extractor.py
+│   └── Counter_dev.py
+├── OCR/                  # Drawing parsing (YOLO + Tesseract)
+│   ├── yolo_inference.py # YOLO model loading and prediction
+│   ├── yolo_crop.py      # Cropping identified regions
+│   ├── best.pt           # Trained YOLO weight file
+│   └── pdf_renderer.py   # PDF to Image conversion
+├── Text_Process/         # Text extraction and AI analysis
+│   ├── API_client.py     # Local LLM API communication
+│   ├── process_texts.py  # AI processing logic
+│   └── excel_maker.py    # Report generation
+├── static/               # Frontend assets (CSS, JS, Images)
+└── templates/            # HTML templates for the UI
+```
+
 ## Features
 
 - **Document Processing (AI Project Reader Mode)**

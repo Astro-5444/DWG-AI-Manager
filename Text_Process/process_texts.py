@@ -18,8 +18,8 @@ EXTRACTION_PROMPT = """From the provided text, extract **only** the following it
 * **File Reference**
 * **Project Name**
 * **Drawing Title**
-* **Floor** *(only if explicitly labeled)*
-* **Block** *(only if explicitly labeled — may also appear as "Part")*
+* **Floor** *(only if explicitly labeled or inferable from other fields)*
+* **Block** *(only if explicitly labeled or inferable from other fields — may also appear as "Part")*
 * **ISSUE DATE** *(only if explicitly labeled)*
 * **REV.** *(only if explicitly labeled)*
 
@@ -49,34 +49,54 @@ EXTRACTION_PROMPT = """From the provided text, extract **only** the following it
 
     Drawing Title: DATA & IP TELEPHONE SYSTEM-FIRST FLOOR OVERALL PLAN
 
-7. If a required field (Floor, Block, or Part) is not explicitly labeled,
+7. If a required field (Floor, Block, or Part) is **not explicitly labeled**,
    you MAY extract it ONLY if the exact wording appears elsewhere in the provided text
    (including Drawing Title or Sheet Title).
    The extracted value must match the text EXACTLY as written.
    Do NOT infer, summarize, normalize, or generate missing information.
-    ### Example
 
-    If the text contains:
-    Drawing Title:
-    DATA & IP TELEPHONE SYSTEM – FIRST FLOOR OVERALL PLAN
+   ### Example
 
-    And there is NO explicit "Floor:" label,
-    Then output:
-    Floor: FIRST FLOOR
+   If the text contains:
+   Drawing Title:
+   DATA & IP TELEPHONE SYSTEM – FIRST FLOOR OVERALL PLAN
 
-    If the wording does NOT appear anywhere in the text,
-    output:
-    Floor: Not mentioned
+   And there is NO explicit "Floor:" label,
+   Then output:
+   Floor: FIRST FLOOR
+
+   If the wording does NOT appear anywhere in the text,
+   output:
+   Floor: Not mentioned
+
+8. If a required field (Floor, Block, or Part) cannot be found anywhere in the provided text,
+   use the **File PATH or File Reference** as a last-resort source — but ONLY if the value
+   appears explicitly and unambiguously as a recognizable word or phrase within the path/filename.
+   Extract the value exactly as it appears in the path. Do NOT interpret abbreviations,
+   codes, or short tokens unless they spell out the full word clearly.
+
+   ### Example
+
+   If Block is not found anywhere in the text body, but the File PATH is:
+   D:\Projects\BLOCK C\Drawings\EL-101.dwg
+
+   Then output:
+   Block: BLOCK C
+
+   If the path contains only an ambiguous code like "BLK-C" or "B3" with no clear word,
+   output:
+   Block: Not mentioned
 
 ---
 
 ### **Important Notes**
 
 * **Block** may not be written as "Block"; it can be labeled as **"Part"**.
-* **File PATH** may not be written as "File PATH"; it can be labeled as **ORIGINAL PATH"**.
+* **File PATH** may not be written as "File PATH"; it can be labeled as **"ORIGINAL PATH"**.
 * **There is no such a thing "PART -A" it is "PART A"**.
 * **Some information might be like this "234 | 12/08/2013 Issued For Construction AH
 REV. DATE REASON FOR ISSUE CHK." So the issue date will be 12/08/2013 and REV will be 234.
+
 ---
 
 ### **Required Output Format**

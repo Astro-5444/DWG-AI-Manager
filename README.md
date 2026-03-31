@@ -50,7 +50,7 @@ The system is designed to simplify working with large sets of engineering drawin
 ### Excel Output — DWG List
 ![Excel DWG List](screenshots/list_screenshot.png)
  
-### Excel Output — Symbol Count Report
+### Excel Output — Symbol Count 
 ![Excel Symbol Count](screenshots/count_screenshot.png)
 
 ---

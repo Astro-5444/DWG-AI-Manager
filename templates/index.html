@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Project Reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .animate-scaleIn {
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        .animate-slideUp {
+            animation: slideUp 0.35s ease-out;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        svg {
+            display: inline-block;
+            vertical-align: middle;
+            fill: currentColor;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        button svg {
+            flex-shrink: 0;
+        }
+
+        .check-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: rgba(51, 65, 85, .5);
+            border: 1px solid rgba(100, 116, 139, .3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background .15s, border-color .15s;
+            user-select: none;
+        }
+
+        .check-item:hover {
+            background: rgba(71, 85, 105, .6);
+            border-color: #6366f1;
+        }
+
+        .check-item input[type=checkbox] {
+            accent-color: #6366f1;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .check-item span {
+            font-size: .8rem;
+            color: #e2e8f0;
+            cursor: pointer;
+            word-break: break-all;
+        }
+
+        /* ── Symbol image cards ── */
+        .sym-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+        }
+
+        .sym-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 8px 8px;
+            background: rgba(51, 65, 85, .55);
+            border: 2px solid rgba(100, 116, 139, .25);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background .15s, border-color .15s, transform .15s;
+            user-select: none;
+        }
+
+        .sym-card:hover {
+            background: rgba(71, 85, 105, .7);
+            border-color: #6366f1;
+            transform: translateY(-2px);
+        }
+
+        .sym-card input[type=checkbox] {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            accent-color: #6366f1;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* When checked, highlight the card */
+        .sym-card:has(input:checked) {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, .18);
+        }
+
+        .sym-img-wrap {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+        .sym-img-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .sym-name-fallback {
+            font-size: .7rem;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .sym-label {
+            font-size: .7rem;
+            color: #cbd5e1;
+            text-align: center;
+            word-break: break-all;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white flex flex-col">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 shadow-2xl">
+        <div class="flex flex-col items-center space-y-3">
+            <div class="flex items-center justify-center space-x-3">
+                <div id="headerIcon"></div>
+                <h1 class="text-3xl font-bold tracking-tight">AI Project Reader</h1>
+            </div>
+            <div id="timerDisplay" class="text-sm bg-black/20 px-3 py-1 rounded-full font-mono">
+                Total: 0s | Stage: —
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="flex flex-1 overflow-hidden">
+
+        <!-- ═══ Sidebar ═══ -->
+        <div class="w-80 bg-slate-800/50 backdrop-blur-lg border-r border-slate-700 p-6 flex flex-col overflow-y-auto">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold mb-5 text-blue-400">Control Panel</h2>
+
+                <!-- Select Folder -->
+                <button id="selectBtn" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700
+                           disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-lg
+                           transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg
+                           hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none mb-4">
+                    <i data-lucide="folder-open" class="w-5 h-5"></i>
+                    <span>Select Folder</span>
+                </button>
+
+                <!-- ── Two Action Buttons (hidden until folder is set) ── -->
+                <div id="actionBtns" class="hidden space-y-3">
+
+                    <!-- Make Excel -->
+                    <button id="excelBtn" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700
+                               disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-lg
+                               transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg
+                               hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none">
+                        <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                        <span>Make Excel</span>
+                    </button>
+
+                    <!-- Count Symbols -->
+                    <button id="countBtn" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600
+                               disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-lg
+                               transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg
+                               hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none">
+                        <i data-lucide="scan-search" class="w-5 h-5"></i>
+                        <span>Count Symbols</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="bg-slate-700/30 rounded-lg p-5 border border-slate-600/50 backdrop-blur-sm mb-4">
+                <div class="mb-4">
+                    <div class="text-sm text-gray-400 mb-1">Files Found</div>
+                    <div id="fileCount" class="text-2xl font-bold text-blue-400">0</div>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-400 mb-1">Selected Path</div>
+                    <div id="selectedPath" class="text-xs text-gray-300 break-all">No folder selected</div>
+                </div>
+            </div>
+
+            <!-- Stage Progress -->
+            <div class="flex-1">
+                <h3 id="stagesLabel" class="text-sm font-semibold text-gray-400 mb-3">PIPELINE</h3>
+                <div id="stagesContainer" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- ═══ Main Content ═══ -->
+        <div class="flex-1 flex flex-col p-8 overflow-hidden">
+
+            <!-- Progress Section -->
+            <div class="bg-slate-800/30 backdrop-blur-lg rounded-xl p-6 mb-6 border border-slate-700/50 shadow-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-lg font-semibold">
+                        <span id="statusText" class="text-gray-400">Status: Idle</span>
+                    </div>
+                    <div id="progressPercent" class="text-2xl font-bold text-blue-400">0%</div>
+                </div>
+                <div id="fileCounter" class="text-sm font-medium text-blue-300 mb-4 h-5 flex items-center hidden"></div>
+                <div class="relative h-3 bg-slate-700 rounded-full overflow-hidden">
+                    <div id="progressFill" class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500
+                               transition-all duration-300 ease-out rounded-full" style="width: 0%">
+                        <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ Count Selection Panel (hidden by default) ══ -->
+            <div id="countPanel" class="hidden mb-6 animate-slideUp">
+                <div
+                    class="bg-slate-800/40 backdrop-blur-lg rounded-xl border border-amber-500/30 shadow-xl overflow-hidden">
+
+                    <div
+                        class="bg-gradient-to-r from-amber-600/30 to-orange-600/30 px-6 py-4 border-b border-amber-500/20 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-amber-300 flex items-center gap-2">
+                                <i data-lucide="scan-search" class="w-5 h-5"></i>
+                                Symbol Count Configuration
+                            </h3>
+                            <p class="text-sm text-gray-400 mt-1">Select which symbols to count and which files to scan.
+                            </p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="refreshSymbols()"
+                                title="Rescan the symbols folder (use after closing Symbol Maker)"
+                                class="text-xs px-3 py-1.5 bg-green-700/30 hover:bg-green-600/50 border border-green-500/30
+                                       text-green-300 rounded-lg transition-colors flex items-center gap-1.5 flex-shrink-0">
+                                <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                                Refresh Symbols
+                            </button>
+                            <button id="reExtractBtn" onclick="showSourcePickerFromPanel()"
+                                class="text-xs px-3 py-1.5 bg-amber-600/30 hover:bg-amber-600/50 border border-amber-500/30
+                                       text-amber-300 rounded-lg transition-colors flex items-center gap-1.5 flex-shrink-0">
+                                <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                                Re-extract
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-6 space-y-6">
+
+                        <!-- Symbols -->
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="text-sm font-semibold text-amber-400 uppercase tracking-wider">
+                                    Symbols
+                                    <span id="symSelCount" class="ml-2 text-xs font-normal text-gray-400">(0
+                                        selected)</span>
+                                </h4>
+                                <div class="flex gap-2">
+                                    <button onclick="toggleAll('sym',true)"
+                                        class="text-xs px-2 py-1 bg-indigo-600/40 hover:bg-indigo-600/60 rounded text-indigo-300 transition-colors">
+                                        All
+                                    </button>
+                                    <button onclick="toggleAll('sym',false)"
+                                        class="text-xs px-2 py-1 bg-slate-600/40 hover:bg-slate-600/60 rounded text-gray-400 transition-colors">
+                                        None
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="symbolsGrid" class="sym-grid max-h-64 overflow-y-auto pr-1">
+                                <div class="text-gray-500 text-sm col-span-full py-4 text-center">Loading symbols…</div>
+                            </div>
+                        </div>
+
+                        <!-- Files -->
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="text-sm font-semibold text-amber-400 uppercase tracking-wider">
+                                    Files / Floor Plans
+                                    <span id="fileSelCount" class="ml-2 text-xs font-normal text-gray-400">(0
+                                        selected)</span>
+                                </h4>
+                                <div class="flex gap-2">
+                                    <button onclick="toggleAll('file',true)"
+                                        class="text-xs px-2 py-1 bg-indigo-600/40 hover:bg-indigo-600/60 rounded text-indigo-300 transition-colors">
+                                        All
+                                    </button>
+                                    <button onclick="toggleAll('file',false)"
+                                        class="text-xs px-2 py-1 bg-slate-600/40 hover:bg-slate-600/60 rounded text-gray-400 transition-colors">
+                                        None
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="filesGrid" class="check-grid max-h-52 overflow-y-auto pr-1">
+                                <div class="text-gray-500 text-sm col-span-full py-4 text-center">Loading files…</div>
+                            </div>
+                        </div>
+
+                        <!-- Run Count Button -->
+                        <div class="flex justify-end">
+                            <button id="runCountBtn" onclick="submitCount()" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600
+                                       disabled:from-gray-600 disabled:to-gray-700
+                                       text-white font-semibold py-2.5 px-8 rounded-lg transition-all duration-200
+                                       flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5
+                                       disabled:transform-none">
+                                <i data-lucide="play" class="w-5 h-5"></i>
+                                Run Count
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div
+                class="flex-1 bg-slate-800/30 backdrop-blur-lg rounded-xl border border-slate-700/50 shadow-xl overflow-hidden flex flex-col">
+                <div class="bg-slate-700/50 px-6 py-3 border-b border-slate-600/50">
+                    <h3 class="text-sm font-semibold text-gray-300 flex items-center space-x-2">
+                        <i data-lucide="terminal" class="w-4 h-4"></i>
+                        <span>Activity Log</span>
+                    </h3>
+                </div>
+                <div id="logContainer" class="flex-1 overflow-y-auto p-6 font-mono text-sm space-y-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ Success Modal ══ -->
+    <div id="successModal"
+        class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+        <div
+            class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 shadow-2xl border border-green-500/30 max-w-md w-full transform animate-scaleIn">
+            <div class="text-center">
+                <div
+                    class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                    <i data-lucide="check-circle-2" class="text-white w-8 h-8"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Processing Complete!</h2>
+                <p class="text-gray-400 mb-6">All tasks have been completed successfully.</p>
+                <div class="bg-slate-700/50 rounded-lg p-4 mb-6 text-left">
+                    <div class="text-xs text-gray-400 mb-1">Output File:</div>
+                    <div id="modalOutputPath" class="text-sm text-green-400 break-all">...</div>
+                </div>
+                <div class="flex gap-3">
+                    <button id="openExcelBtn"
+                        class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700
+                               text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg
+                               hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                        <span>Open Results</span>
+                    </button>
+                    <button id="closeModal"
+                        class="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700
+                               text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ Source Picker Modal ══ -->
+    <div id="sourcePickerModal"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+        <div
+            class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 shadow-2xl border border-amber-500/30 max-w-lg w-full transform animate-scaleIn">
+            <h2 class="text-xl font-bold text-amber-300 mb-1 flex items-center gap-2">
+                <i data-lucide="image" class="w-5 h-5"></i>
+                Select Legend Source
+            </h2>
+            <p class="text-sm text-gray-400 mb-4">Choose which legend image to extract symbols from, or browse for any
+                image file.</p>
+
+            <!-- Auto-detected list -->
+            <div id="sourceList" class="space-y-2 max-h-52 overflow-y-auto mb-4 pr-1">
+            </div>
+
+            <!-- Browse button (pick any image as legend source) -->
+            <button id="browseFileBtn" class="w-full mb-5 border border-dashed border-amber-500/50 hover:border-amber-400 text-amber-400 hover:text-amber-300
+                       py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center gap-2"
+                title="Browse for a legend/information-box image to extract symbols from">
+                <i data-lucide="folder-open" class="w-4 h-4"></i>
+                Browse for legend image…
+            </button>
+
+            <!-- Action row -->
+            <div class="flex gap-3">
+                <button id="extractBtn"
+                    class="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600
+                           text-white font-semibold py-2.5 px-3 rounded-lg transition-all duration-200 shadow-lg
+                           hover:shadow-xl flex items-center justify-center gap-1.5 disabled:from-gray-600 disabled:to-gray-700 text-sm">
+                    <i data-lucide="scissors" class="w-4 h-4"></i>
+                    Auto Extract
+                    <span id="extractSpinner" class="hidden">
+                        <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                    </span>
+                </button>
+                <button id="manualExtractBtn" class="flex-1 border border-amber-500/50 bg-slate-800 hover:bg-slate-700 text-amber-300
+                           font-semibold py-2.5 px-3 rounded-lg transition-all duration-200 shadow-lg
+                           flex items-center justify-center gap-1.5 disabled:opacity-50 text-sm">
+                    <i data-lucide="pen-tool" class="w-4 h-4"></i>
+                    Manual (Draw)
+                    <span id="manualSpinner" class="hidden">
+                        <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                    </span>
+                </button>
+                <button id="cancelExtractBtn"
+                    class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-gray-300 rounded-lg text-sm transition-colors">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        const headerIcon = lucide.createElement('Database');
+        headerIcon.setAttribute('class', 'text-2xl text-white');
+        document.getElementById('headerIcon').appendChild(headerIcon);
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

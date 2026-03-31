@@ -36,9 +36,6 @@ The system is designed to simplify working with large sets of engineering drawin
 ### Main Interface
 ![Main UI](screenshots/main_ui.png)
 
-### AI Project Reader
-![AI Project Reader](screenshots/ai_reader.png)
-
 ### Legend Extractor
 ![Legend Counter](screenshots/legend_extractor.png)
 

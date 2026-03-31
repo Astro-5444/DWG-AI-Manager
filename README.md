@@ -242,4 +242,4 @@ DWG-AI-Manager/
 
 ## Code Attribution and License
 
-Copyright (c) 2026 ASTRO-5444. This project is licensed under the MIT License. See `LICENSE` for full details.
+Copyright (c) 2026 ASTRO-5444. This project is licensed under the MIT License. See [PyTorch's Official Guide](https://github.com/Astro-5444/DWG-AI-Manager?tab=MIT-1-ov-file#) for full details.

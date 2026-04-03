@@ -1,21 +1,33 @@
-MIT License
+Copyright (c) 2025 Astro-5444 
 
-Copyright (c) 2026 Kabdu / AVIS Manager
+Permission is hereby granted, free of charge, to any person to use this
+software strictly for personal testing, evaluation, and bug reporting
+purposes only, subject to the following conditions:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+FREE USE IS LIMITED TO:
+- Running the software locally for personal testing
+- Evaluating the software for non-commercial purposes
+- Reporting bugs or issues to the author
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+EVERYTHING ELSE REQUIRES A PAID LICENSE:
+Any other use is strictly prohibited without a written commercial license
+from the author. This includes but is not limited to:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+- Using the software within a company or organization
+- Integrating it into any product or service
+- Enhancing, modifying, or building upon it for any distributed purpose
+- Selling or sublicensing the software or any derivative of it
+- Using it to generate reports, outputs, or value in a professional context
+
+To obtain a commercial license, contact:
+abdulrhmanhimk@gmail.com
+
+CONDITIONS:
+- This copyright notice must be included in all copies or portions of the
+  software.
+- You may not remove or alter any license notices.
+
+DISCLAIMER:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. THE AUTHOR
+IS NOT LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE
+USE OF THIS SOFTWARE.

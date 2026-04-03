@@ -242,4 +242,4 @@ DWG-AI-Manager/
 
 ## Code Attribution and License
 
-Copyright (c) 2026 ASTRO-5444. This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for full details.
+Copyright (c) 2026 ASTRO-5444. See [`LICENSE`](LICENSE) for full details.

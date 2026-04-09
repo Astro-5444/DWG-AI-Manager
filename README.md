@@ -80,6 +80,9 @@ DWG-AI-Manager/
 ### Excel Output — Symbol Count 
 ![Excel Symbol Count](screenshots/count_screenshot.png)
 
+### Show Case video
+![Show Case](https://youtu.be/PVaytbpzEGc)
+
 ---
 
 ## Excel Output

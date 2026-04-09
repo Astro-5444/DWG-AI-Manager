@@ -81,7 +81,7 @@ DWG-AI-Manager/
 ![Excel Symbol Count](screenshots/count_screenshot.png)
 
 ### Show Case video
-![Show Case](https://youtu.be/PVaytbpzEGc)
+[Show Case](https://youtu.be/PVaytbpzEGc)
 
 ---
 

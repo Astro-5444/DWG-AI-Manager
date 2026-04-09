@@ -78,7 +78,7 @@ DWG-AI-Manager/
 ![Excel DWG List](screenshots/list_screenshot.png)
  
 ### Excel Output — Symbol Count 
-
+![Excel Symbol Count](screenshots/count_screenshot.png)
 
 ### Show Case video
 [Show Case](https://youtu.be/PVaytbpzEGc)
